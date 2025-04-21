@@ -1,4 +1,4 @@
-name: Build_Arcadyan_AW1000
+name: ARCADYAN_TELSTRA_AW1000
 on: 
   repository_dispatch:
   workflow_dispatch:
