@@ -44,3 +44,21 @@ config wifi-iface
 	option encryption 'none'
 	option disabled '0'
 EOF
+
+# Auto-connect modem using ModemManager at boot
+mkdir -p openwrt/files/etc/init.d
+cat <<'EOF' > openwrt/files/etc/init.d/modem_autoconnect
+#!/bin/sh /etc/rc.common
+# Autostart ModemManager and connect using mmcli
+
+START=95
+
+start() {
+    logger "Starting ModemManager and connecting modem..."
+    /etc/init.d/modemmanager start
+    sleep 10  # Give ModemManager time to detect modem
+    mmcli -m 0 --simple-connect="apn=internet"
+}
+EOF
+
+chmod +x openwrt/files/etc/init.d/modem_autoconnect
