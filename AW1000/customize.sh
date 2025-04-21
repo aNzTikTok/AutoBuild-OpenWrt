@@ -1,3 +1,5 @@
+USE CURL TO CREATE BANNER https://raw.githubusercontent.com/intannajwa/Auto_Build/master/banner
+
 #!/bin/bash
 
 # Create config folders
@@ -25,20 +27,7 @@ sed -i 's/LEDE/DOTYCAT/g' openwrt/package/lean/default-settings/files/zzz-defaul
 sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
 
 # Set custom SSH banner with Dotycat design
-cat <<EOF > openwrt/files/etc/banner
-          (         )             )                          
- )\ )   ( /(   *   )  ( /(    (     (       *   )  
-(()/(   )\())` )  /(  )\())   )\    )\    ` )  /(  
- /(_)) ((_)\  ( )(_))((_)\  (((_)((((_)(   ( )(_)) 
-(_))_    ((_)(_(_())__ ((_) )\___ )\ _ )\ (_(_())  
- |   \  / _ \|_   _|\ \ / /((/ __|(_)_\(_)|_   _|  
- | |) || (_) | | |   \ V /  | (__  / _ \    | |    
- |___/  \___/  |_|    |_|    \___|/_/ \_\   |_|    
---------------------------------------------------
- Dotycat B35 - OpenWrt Build V$(cat openwrt/version)
---------------------------------------------------
-EOF
-
+curl -s https://raw.githubusercontent.com/intannajwa/Auto_Build/master/banner -o openwrt/files/etc/banner
 
 # Enable and customize Wi-Fi
 cat <<EOF > openwrt/files/etc/config/wireless
