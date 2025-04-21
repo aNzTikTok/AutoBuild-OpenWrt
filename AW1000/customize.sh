@@ -62,4 +62,6 @@ start() {
 EOF
 
 chmod +x openwrt/files/etc/init.d/modem_autoconnect
-echo "/etc/init.d/modem_autoconnect enable" >> openwrt/files/etc/rc.local
+mkdir -p openwrt/files/etc/rc.d
+ln -s ../init.d/modem_autoconnect openwrt/files/etc/rc.d/S95modem_autoconnect
+
