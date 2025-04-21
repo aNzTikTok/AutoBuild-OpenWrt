@@ -54,10 +54,27 @@ cat <<'EOF' > openwrt/files/etc/init.d/modem_autoconnect
 START=95
 
 start() {
-    logger "Starting ModemManager and connecting modem..."
+    logger "Starting ModemManager and waiting for modem..."
+
     /etc/init.d/modemmanager start
-    sleep 10  # Give ModemManager time to detect modem
-    mmcli -m 0 --simple-connect="apn=internet"
+    sleep 3
+
+    # Wait up to 30 seconds for /dev/ttyUSB2 to appear
+    for i in $(seq 1 30); do
+        if [ -e /dev/ttyUSB2 ]; then
+            logger "Modem device detected: /dev/ttyUSB2"
+            break
+        fi
+        sleep 1
+    done
+
+    if [ ! -e /dev/ttyUSB2 ]; then
+        logger "Modem not detected. Aborting APN setup."
+        exit 1
+    fi
+
+    logger "Connecting to mobile network using APN..."
+    mmcli -m 0 --simple-connect="apn=internet" || logger "ModemManager failed to connect."
 }
 EOF
 
