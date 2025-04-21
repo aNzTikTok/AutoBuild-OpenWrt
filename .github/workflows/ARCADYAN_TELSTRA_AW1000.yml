@@ -5,12 +5,12 @@ on:
   
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
-  CONFIG_FILE: 'Arcadyan_AW1000.config'
+  CONFIG_FILE: 'AW1000/AW1000.config'
   REPO_BRANCH: master
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
-  TZ: Asia/Shanghai
+  TZ: Asia/Kuala_Lumpur
   
 jobs:
   build:
@@ -80,7 +80,7 @@ jobs:
 
     - name: Configuration Customization - Build_Arcadyan_AW1000
       run: |
-        chmod +x ./customize.sh && ./customize.sh
+        chmod +x ./AW1000/customize.sh && ./AW1000/customize.sh
         [[ -d "files" ]] && mv -f files openwrt/files
         [[ -e "${CONFIG_FILE}" ]] && cp -f ${CONFIG_FILE} openwrt/.config
         cd openwrt && make defconfig
