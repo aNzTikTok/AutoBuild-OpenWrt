@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 # Create config folders
 mkdir -p openwrt/files/etc/config
