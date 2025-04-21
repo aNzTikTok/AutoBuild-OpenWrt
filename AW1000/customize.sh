@@ -1,6 +1,4 @@
-USE CURL TO CREATE BANNER https://raw.githubusercontent.com/intannajwa/Auto_Build/master/banner
-
-#!/bin/bash
+!/bin/bash
 
 # Create config folders
 mkdir -p openwrt/files/etc/config
