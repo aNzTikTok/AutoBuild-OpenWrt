@@ -27,23 +27,26 @@ sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-se
 # Set custom SSH banner with Dotycat design
 curl -s https://raw.githubusercontent.com/intannajwa/Auto_Build/master/banner -o openwrt/files/etc/banner
 
-# Enable and customize Wi-Fi
-cat <<EOF > openwrt/files/etc/config/wireless
-config wifi-device 'radio0'
-	option type 'mac80211'
-	option hwmode '11a'
-	option path 'platform/18000000.wmac'
-	option htmode 'HT20'
-	option channel '6'
+mkdir -p openwrt/files/etc/uci-defaults
+cat <<EOF > openwrt/files/etc/uci-defaults/99-custom-wifi
+uci set wireless.@wifi-device[0].type='mac80211'
+uci set wireless.@wifi-device[0].channel='6'
+uci set wireless.@wifi-device[0].hwmode='11a'
+uci set wireless.@wifi-device[0].path='platform/18000000.wmac'
+uci set wireless.@wifi-device[0].htmode='HT20'
 
-config wifi-iface
-	option device 'radio0'
-	option network 'lan'
-	option mode 'ap'
-	option ssid 'DOTYCAT'
-	option encryption 'none'
-	option disabled '0'
+uci set wireless.@wifi-iface[0].device='radio0'
+uci set wireless.@wifi-iface[0].network='lan'
+uci set wireless.@wifi-iface[0].mode='ap'
+uci set wireless.@wifi-iface[0].ssid='DOTYCAT'
+uci set wireless.@wifi-iface[0].encryption='none'
+uci set wireless.@wifi-iface[0].disabled='0'
+
+uci commit wireless
+wifi reload
 EOF
+chmod +x openwrt/files/etc/uci-defaults/99-custom-wifi
+
 
 # Auto-connect modem using ModemManager at boot
 mkdir -p openwrt/files/etc/init.d
