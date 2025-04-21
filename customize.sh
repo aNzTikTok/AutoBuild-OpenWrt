@@ -1,21 +1,59 @@
 #!/bin/bash
 
-# Create config directory
+# Create config folders
 mkdir -p openwrt/files/etc/config
+mkdir -p openwrt/files/etc
 
-# Force LuCI interface language to English
+# Set system hostname, timezone
+cat <<EOF > openwrt/files/etc/config/system
+config system
+	option hostname 'DOTYCAT'
+	option timezone 'MST-8'
+	option zonename 'Asia/Kuala Lumpur'
+EOF
+
+# Set default LuCI language to English
 cat <<EOF > openwrt/files/etc/config/luci
 config core 'main'
 	option lang 'en'
 EOF
 
-# Set timezone to Malaysia (Kuala Lumpur)
-cat <<EOF > openwrt/files/etc/config/system
-config system
-	option hostname 'OpenWrt'
-	option timezone 'MST-8'
-	option zonename 'Asia/Kuala Lumpur'
+# Change LuCI Web UI title (from LEDE to custom)
+sed -i 's/LEDE/DOTYCAT/g' openwrt/package/lean/default-settings/files/zzz-default-settings
+
+# Remove default root password (empty login)
+sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
+
+# Set custom SSH banner with Dotycat design
+cat <<EOF > openwrt/files/etc/banner
+          (         )             )                          
+ )\ )   ( /(   *   )  ( /(    (     (       *   )  
+(()/(   )\())` )  /(  )\())   )\    )\    ` )  /(  
+ /(_)) ((_)\  ( )(_))((_)\  (((_)((((_)(   ( )(_)) 
+(_))_    ((_)(_(_())__ ((_) )\___ )\ _ )\ (_(_())  
+ |   \  / _ \|_   _|\ \ / /((/ __|(_)_\(_)|_   _|  
+ | |) || (_) | | |   \ V /  | (__  / _ \    | |    
+ |___/  \___/  |_|    |_|    \___|/_/ \_\   |_|    
+--------------------------------------------------
+ Dotycat B35 - OpenWrt Build V$(cat openwrt/version)
+--------------------------------------------------
 EOF
 
-# Remove default root password
-sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
+
+# Enable and customize Wi-Fi
+cat <<EOF > openwrt/files/etc/config/wireless
+config wifi-device 'radio0'
+	option type 'mac80211'
+	option hwmode '11a'
+	option path 'platform/18000000.wmac'
+	option htmode 'HT20'
+	option channel '6'
+
+config wifi-iface
+	option device 'radio0'
+	option network 'lan'
+	option mode 'ap'
+	option ssid 'DOTYCAT'
+	option encryption 'none'
+	option disabled '0'
+EOF
