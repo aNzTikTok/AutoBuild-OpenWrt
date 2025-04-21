@@ -60,6 +60,11 @@ jobs:
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
+        rm -f feeds.conf.default
+        echo 'src-git packages https://git.openwrt.org/feed/packages.git;openwrt-24.10' >> feeds.conf.default
+        echo 'src-git luci https://git.openwrt.org/project/luci.git;openwrt-24.10' >> feeds.conf.default
+        echo 'src-git routing https://git.openwrt.org/feed/routing.git;openwrt-24.10' >> feeds.conf.default
+        echo 'src-git telephony https://git.openwrt.org/feed/telephony.git;openwrt-24.10' >> feeds.conf.default
         echo 'src-git symwrt https://github.com/aNzTikTok/symwrt.git;main' >> feeds.conf.default
 
     - name: Free up disk space
